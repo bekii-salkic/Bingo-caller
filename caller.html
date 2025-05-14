@@ -6,20 +6,28 @@
   <title>Bingo Caller</title>
   <style>
     body { font-family: sans-serif; text-align: center; }
-    button { padding: 10px 20px; font-size: 18px; }
+    button { padding: 10px 20px; font-size: 18px; margin: 5px; }
     #numberDisplay { font-size: 50px; margin: 20px; }
   </style>
 </head>
 <body>
   <h1>Drag Bingo Nummer</h1>
   <button onclick="drawNumber()">Dra Nummer</button>
+  <button onclick="resetGame()">Starta nytt spel</button>
   <div id="numberDisplay">...</div>
   <h2>Dragna Nummer:</h2>
   <p id="calledNumbers">(väntar...)</p>
 
   <script>
-    const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
-    const called = [];
+    let allNumbers = [];
+    let called = [];
+
+    function initGame() {
+      allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+      called = [];
+      document.getElementById("numberDisplay").textContent = "...";
+      document.getElementById("calledNumbers").textContent = "(väntar...)";
+    }
 
     function getLetterForNumber(num) {
       if (num <= 15) return "B";
@@ -44,6 +52,15 @@
       called.push(fullNumber);
       document.getElementById("calledNumbers").textContent = called.join(", ");
     }
+
+    function resetGame() {
+      if (confirm("Är du säker på att du vill starta ett nytt spel?")) {
+        initGame();
+      }
+    }
+
+    // Starta spelet första gången
+    initGame();
   </script>
 </body>
 </html>
