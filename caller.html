@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bingo Caller</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Caller Vy</h1>
+  <button onclick="drawNumber()">Dra nummer</button>
+  <h2>Dragna nummer:</h2>
+  <p id="calledNumbers">(inga ännu)</p>
+  <script>
+    const drawnNumbers = [];
+
+    function drawNumber() {
+      let num;
+      do {
+        num = Math.floor(Math.random() * 75) + 1;
+      } while (drawnNumbers.includes(num) && drawnNumbers.length < 75);
+
+      if (drawnNumbers.length < 75) {
+        drawnNumbers.push(num);
+        document.getElementById("calledNumbers").innerText = drawnNumbers.join(", ");
+      } else {
+        alert("Alla nummer har dragits!");
+      }
+    }
+  </script>
+</body>
+</html>
