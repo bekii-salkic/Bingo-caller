@@ -2,46 +2,77 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bingo Spelare</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-    }
-    table {
-      margin: auto;
-      border-collapse: collapse;
-    }
-    th, td {
-      width: 50px;
-      height: 50px;
-      border: 1px solid #999;
-      font-size: 20px;
-      text-align: center;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    td.marked {
-      background-color: lightgreen;
-    }
-  </style>
+  <title>Caller</title>
+  <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
-  <h1>Bingo</h1>
-  <p id="playerName">Spelare: ...</p>
-  <table id="bingoBoard">
-    <thead>
-      <tr>
-        <th>B</th><th>I</th><th>N</th><th>G</th><th>O</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <h2>Dragna nummer:</h2>
-  <p id="calledNumbers">(väntar...)</p>
+  <h1>Bingo Caller</h1>
+  <button onclick="drawNumber()">Dra nummer</button>
+  <button onclick="resetGame()">Starta nytt spel</button>
+  <p id="drawnNumbers">Dragna nummer: (väntar...)</p>
 
-  <script src="script.js"></script>
+  <script>
+    const sheetId = "1vNE0NmqkcClIT0wyFKb9lmE-4t2WeekQm8gCDzVqE-c";
+    const apiKey = "DIN_API_KEY";
+    const clientId = "DIN_CLIENT_ID";
+
+    let drawn = [];
+
+    function getColumnLetter(num) {
+      if (num <= 15) return 'B';
+      if (num <= 30) return 'I';
+      if (num <= 45) return 'N';
+      if (num <= 60) return 'G';
+      return 'O';
+    }
+
+    function updateDisplay() {
+      document.getElementById("drawnNumbers").innerText =
+        "Dragna nummer: " + drawn.map(n => getColumnLetter(n) + n).join(", ");
+    }
+
+    function drawNumber() {
+      if (drawn.length >= 75) return alert("Alla nummer är dragna!");
+      let num;
+      do {
+        num = Math.floor(Math.random() * 75) + 1;
+      } while (drawn.includes(num));
+      drawn.push(num);
+      updateDisplay();
+      writeToSheet(drawn);
+    }
+
+    function resetGame() {
+      drawn = [];
+      updateDisplay();
+      writeToSheet([]);
+    }
+
+    function writeToSheet(numbers) {
+      const values = [numbers.map(n => getColumnLetter(n) + n)];
+      const body = { values };
+      gapi.client.sheets.spreadsheets.values.update({
+        spreadsheetId: sheetId,
+        range: "Game!A1",
+        valueInputOption: "RAW",
+        resource: body
+      }).then(res => {
+        console.log("Uppdaterat Sheet:", res);
+      });
+    }
+
+    function initApi() {
+      gapi.load('client:auth2', () => {
+        gapi.auth2.init({ client_id: clientId }).then(() => {
+          gapi.auth2.getAuthInstance().signIn().then(() => {
+            gapi.client.setApiKey(apiKey);
+            gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4");
+          });
+        });
+      });
+    }
+
+    initApi();
+  </script>
 </body>
 </html>
