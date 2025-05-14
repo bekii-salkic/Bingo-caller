@@ -2,30 +2,47 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bingo Caller</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    button { padding: 10px 20px; font-size: 18px; }
+    #numberDisplay { font-size: 50px; margin: 20px; }
+  </style>
 </head>
 <body>
-  <h1>Caller Vy</h1>
-  <button onclick="drawNumber()">Dra nummer</button>
-  <h2>Dragna nummer:</h2>
-  <p id="calledNumbers">(inga ännu)</p>
+  <h1>Drag Bingo Nummer</h1>
+  <button onclick="drawNumber()">Dra Nummer</button>
+  <div id="numberDisplay">...</div>
+  <h2>Dragna Nummer:</h2>
+  <p id="calledNumbers">(väntar...)</p>
+
   <script>
-    const drawnNumbers = [];
+    const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+    const called = [];
+
+    function getLetterForNumber(num) {
+      if (num <= 15) return "B";
+      if (num <= 30) return "I";
+      if (num <= 45) return "N";
+      if (num <= 60) return "G";
+      return "O";
+    }
 
     function drawNumber() {
-      let num;
-      do {
-        num = Math.floor(Math.random() * 75) + 1;
-      } while (drawnNumbers.includes(num) && drawnNumbers.length < 75);
-
-      if (drawnNumbers.length < 75) {
-        drawnNumbers.push(num);
-        document.getElementById("calledNumbers").innerText = drawnNumbers.join(", ");
-      } else {
+      if (allNumbers.length === 0) {
         alert("Alla nummer har dragits!");
+        return;
       }
+
+      const i = Math.floor(Math.random() * allNumbers.length);
+      const next = allNumbers.splice(i, 1)[0];
+      const letter = getLetterForNumber(next);
+      const fullNumber = `${letter} ${next}`;
+
+      document.getElementById("numberDisplay").textContent = fullNumber;
+      called.push(fullNumber);
+      document.getElementById("calledNumbers").textContent = called.join(", ");
     }
   </script>
 </body>
