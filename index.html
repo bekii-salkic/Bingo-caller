@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Caller</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .caller { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        button { font-size: 20px; padding: 10px 20px; cursor: pointer; }
+        #number { font-size: 40px; color: green; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="caller">
+        <h1>Bingo Caller</h1>
+        <button onclick="drawNumber()">Draw Number</button>
+        <div id="number"></div>
+    </div>
+    <script>
+        const numbers = [];
+        for (let i = 1; i <= 75; i++) numbers.push(i);
+
+        function drawNumber() {
+            const randomIndex = Math.floor(Math.random() * numbers.length);
+            const drawnNumber = numbers.splice(randomIndex, 1)[0];
+            document.getElementById('number').innerText = 'Number: ' + drawnNumber;
+        }
+    </script>
+</body>
+</html>
