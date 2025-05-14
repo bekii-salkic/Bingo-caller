@@ -1,17 +1,47 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bingo Spelare</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    table {
+      margin: auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #999;
+      font-size: 20px;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    td.marked {
+      background-color: lightgreen;
+    }
+  </style>
 </head>
 <body>
   <h1>Bingo</h1>
   <p id="playerName">Spelare: ...</p>
-  <table id="bingoBoard"></table>
+  <table id="bingoBoard">
+    <thead>
+      <tr>
+        <th>B</th><th>I</th><th>N</th><th>G</th><th>O</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
   <h2>Dragna nummer:</h2>
   <p id="calledNumbers">(väntar...)</p>
+
   <script src="script.js"></script>
 </body>
 </html>
