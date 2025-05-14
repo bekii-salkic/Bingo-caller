@@ -5,18 +5,12 @@ const board = document.querySelector("#bingoBoard tbody");
 
 function generateBingoBoard() {
   const columns = {
-    B: [],
-    I: [],
-    N: [],
-    G: [],
-    O: []
+    B: getUniqueRandomNumbers(1, 15, 5),
+    I: getUniqueRandomNumbers(16, 30, 5),
+    N: getUniqueRandomNumbers(31, 45, 5),
+    G: getUniqueRandomNumbers(46, 60, 5),
+    O: getUniqueRandomNumbers(61, 75, 5)
   };
-
-  while (columns.B.length < 5) columns.B.push(getRandom(1, 15));
-  while (columns.I.length < 5) columns.I.push(getRandom(16, 30));
-  while (columns.N.length < 5) columns.N.push(getRandom(31, 45));
-  while (columns.G.length < 5) columns.G.push(getRandom(46, 60));
-  while (columns.O.length < 5) columns.O.push(getRandom(61, 75));
 
   const all = [columns.B, columns.I, columns.N, columns.G, columns.O];
 
@@ -24,6 +18,14 @@ function generateBingoBoard() {
     const row = board.insertRow();
     for (let j = 0; j < 5; j++) {
       const cell = row.insertCell();
+
+      // Mittenrutan (gratis)
+      if (i === 2 && j === 2) {
+        cell.textContent = "FRI";
+        cell.classList.add("marked");
+        continue;
+      }
+
       const number = all[j][i];
       cell.textContent = number;
       cell.onclick = () => cell.classList.toggle("marked");
@@ -31,8 +33,16 @@ function generateBingoBoard() {
   }
 }
 
-function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function getUniqueRandomNumbers(min, max, count) {
+  const range = Array.from({ length: max - min + 1 }, (_, i) => i + min);
+  const selected = [];
+
+  while (selected.length < count) {
+    const i = Math.floor(Math.random() * range.length);
+    selected.push(range.splice(i, 1)[0]);
+  }
+
+  return selected;
 }
 
 generateBingoBoard();
